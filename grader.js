@@ -49,16 +49,6 @@ var loadChecks = function(checksfile) {
 var checkHtmlFile = function(htmlfile, checksfile) {
     var html = fs.readFileSync(htmlfile);
     return checkHtml(html, checksfile);
-/*
-    $ = cheerioHtmlFile(htmlfile);
-    var checks = loadChecks(checksfile).sort();
-    var out = {};
-    for(var ii in checks) {
-        var present = $(checks[ii]).length > 0;
-        out[checks[ii]] = present;
-    }
-    return out;
-*/
 };
 
 var checkHtml = function (html, checksfile) {
@@ -81,24 +71,20 @@ var buildFn = function (checksFile) {
 	if (result instanceof Error) {
             console.error('Error: ' + util.format(response.message));
 	} else {
-	    //>console.error("result--> " + result);
-	    //console.error(response[0].message);
-	    //console.error(typeof(response[1]));
 	    var checkJson = checkHtml(result, checksFile);
 	    var outJson = JSON.stringify(checkJson, null, 4);    
 	    console.log(outJson);
-
 	}
     }
     return checkResponseHtml;
 };
-
 
 var checkHtmlURL = function(url, checksFile) {
     var checkResponseHtml = buildFn(checksFile);
     rest.get(url)
 	.on('complete', checkResponseHtml);
 }
+
 var clone = function(fn) {
     // Workaround for commander.js issue.
     // http://stackoverflow.com/a/6772648
